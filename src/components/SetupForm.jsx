@@ -32,7 +32,6 @@ function SetupForm({ setTeams, setRounds, setPhase }) {
 
   return (
     <div className="setup-page">
-      <h1>MootMaster</h1>
       <div className="setup-controls">
         <h2>Setup Tournament</h2>
         <input
