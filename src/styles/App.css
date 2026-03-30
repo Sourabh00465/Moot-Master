@@ -1,0 +1,187 @@
+/* General Layout */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  margin: 0;
+  padding: 20px;
+  color: #fff;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2.5rem;
+  color: #ffdd57;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+}
+
+h2, h3 {
+  margin: 10px 0;
+  color: #ffdd57;
+}
+
+/* Buttons */
+button {
+  padding: 8px 16px;
+  margin: 6px;
+  border: none;
+  border-radius: 6px;
+  background: #ff6f61;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+}
+
+button:hover {
+  background: #ff3b2e;
+  transform: scale(1.05);
+}
+
+button.selected {
+  background: #4caf50;
+  color: #fff;
+  box-shadow: 0 0 10px #4caf50;
+}
+
+/* Match Cards */
+.match-card {
+  border-radius: 10px;
+  padding: 15px;
+  margin: 12px 0;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: fadeInBattle 0.8s ease forwards;
+  opacity: 0;
+}
+
+/* Sequential battle animation (staggered delays) */
+.match-card:nth-child(1) { animation-delay: 0.2s; }
+.match-card:nth-child(2) { animation-delay: 0.6s; }
+.match-card:nth-child(3) { animation-delay: 1s; }
+.match-card:nth-child(4) { animation-delay: 1.4s; }
+/* Add more nth-child delays if needed */
+
+@keyframes fadeInBattle {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Layout */
+.prelims-page {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+.prelims-left, .prelims-right {
+  flex: 1;
+  max-width: 450px;
+}
+
+/* Side-by-side rounds */
+.rounds-side {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+}
+
+.round-column {
+  flex: 1;
+  max-width: 300px;
+}
+
+/* Phase transitions */
+.tournament-container {
+  animation: fadeInApp 1s ease-in;
+}
+
+.phase-container.fade-transition {
+  animation: slideInPhase 0.8s ease forwards;
+}
+
+@keyframes fadeInApp {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInPhase {
+  from { opacity: 0; transform: translateX(50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.tournament-container {
+  text-align: center;
+  padding: 20px;
+  background-color: #0d1b2a; /* dark blue */
+  min-height: 100vh;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #f1c40f; /* yellow */
+  margin-bottom: 20px;
+}
+
+.controls {
+  margin-bottom: 20px;
+}
+
+button, .import-btn {
+  background-color: #e74c3c; /* red */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+button:hover, .import-btn:hover {
+  background-color: #c0392b;
+}
+
+.import-btn {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.phase-container {
+  margin-top: 30px;
+}
+
+.winner-button {
+  background-color: green;
+  color: white;
+  font-weight: bold;
+}
+
+.knockout-container {
+  display: flex;
+  justify-content: center;   /* centers horizontally */
+  align-items: flex-start;   /* keeps top alignment */
+  margin-top: 20px;
+}
+
+.round-column {
+  background: #222;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 0 10px;
+  color: yellow;
+}
+
+.match-card {
+  background: #333;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 6px;
+}
+
+.winner-button {
+  background-color: green;
+  color: white;
+  font-weight: bold;
+}
