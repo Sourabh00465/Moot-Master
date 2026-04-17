@@ -8,48 +8,64 @@ export default function generatePrelims(teams) {
   // Round 1
   const shuffled1 = shuffle([...teams]);
   const round1 = [];
-  const rolesMap = {}; // track who was petitioner/respondent
+  const rolesMap = {};
+  const opponentsMap = {};
 
   for (let i = 0; i < shuffled1.length; i += 2) {
+    const petitioner = shuffled1[i];
+    const respondent = shuffled1[i+1];
+
     round1.push({
       matchNumber: `Match ${i/2 + 1}`,
-      petitioner: shuffled1[i],
-      respondent: shuffled1[i+1]
+      petitioner,
+      respondent
     });
-    rolesMap[shuffled1[i]] = "Petitioner";
-    rolesMap[shuffled1[i+1]] = "Respondent";
+
+    rolesMap[petitioner] = "Petitioner";
+    rolesMap[respondent] = "Respondent";
+
+    opponentsMap[petitioner] = respondent;
+    opponentsMap[respondent] = petitioner;
   }
 
-  // Track opponents
-  const opponentsMap = {};
-  round1.forEach(m => {
-    opponentsMap[m.petitioner] = m.respondent;
-    opponentsMap[m.respondent] = m.petitioner;
+  // Pre-compute flipped roles for Round 2
+  const flippedRolesMap = {};
+  teams.forEach(t => {
+    flippedRolesMap[t] = rolesMap[t] === "Petitioner" ? "Respondent" : "Petitioner";
   });
 
   // Round 2
   const shuffled2 = shuffle([...teams]);
   const round2 = [];
+  const used = new Set();
 
-  for (let i = 0; i < shuffled2.length; i += 2) {
-    let t1 = shuffled2[i];
-    let t2 = shuffled2[i+1];
+  for (let i = 0; i < shuffled2.length; i++) {
+    const t1 = shuffled2[i];
+    if (used.has(t1)) continue;
 
-    // Avoid repeat opponents
-    if (opponentsMap[t1] === t2 || opponentsMap[t2] === t1) {
-      const swapIndex = (i+2) % shuffled2.length;
-      [shuffled2[i+1], shuffled2[swapIndex]] = [shuffled2[swapIndex], shuffled2[i+1]];
-      t2 = shuffled2[i+1];
+    // Find valid opponent with complementary role and not same as Round 1
+    let t2 = null;
+    for (let j = i+1; j < shuffled2.length; j++) {
+      const candidate = shuffled2[j];
+      if (
+        !used.has(candidate) &&
+        opponentsMap[t1] !== candidate &&
+        flippedRolesMap[t1] !== flippedRolesMap[candidate] // complementary roles
+      ) {
+        t2 = candidate;
+        break;
+      }
     }
 
-    // Alternate roles: flip compared to Round 1
-    const t1Role = rolesMap[t1] === "Petitioner" ? "Respondent" : "Petitioner";
-    const t2Role = rolesMap[t2] === "Petitioner" ? "Respondent" : "Petitioner";
+    if (!t2) throw new Error(`Could not find valid opponent for ${t1}`);
+
+    used.add(t1);
+    used.add(t2);
 
     round2.push({
-      matchNumber: `Match ${i/2 + 1}`,
-      petitioner: t1Role === "Petitioner" ? t1 : t2,
-      respondent: t1Role === "Respondent" ? t1 : t2
+      matchNumber: `Match ${round2.length + 1}`,
+      petitioner: flippedRolesMap[t1] === "Petitioner" ? t1 : t2,
+      respondent: flippedRolesMap[t1] === "Respondent" ? t1 : t2
     });
   }
 
