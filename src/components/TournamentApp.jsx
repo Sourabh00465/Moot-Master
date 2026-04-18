@@ -53,6 +53,29 @@ function TournamentApp() {
     };
     localStorage.setItem("tournamentState", JSON.stringify(data));
   }, [phase, teams, rounds, qualified, quarterFinals, semiFinals, finals, winner, state]);
+const handleImport = (data) => {
+  setTeams(data.initialTeams || []);
+  setRounds([data.round1 || [], data.round2 || []]);
+  setQualified(data.qualifiedTeams || []);
+  setQuarterFinals(data.quarterFinals || []);
+  setSemiFinals(data.semiFinals || []);
+  setFinals(data.finals || []);
+  setWinner(data.winner || null);
+
+  if (data.winner || data.finals?.length || data.semiFinals?.length || data.quarterFinals?.length) {
+    setPhase("knockout");
+  } else if (data.round1?.length || data.round2?.length) {
+    setPhase("prelims");
+  } else {
+    setPhase("setup");
+  }
+};
+<SetupForm
+  setTeams={setTeams}
+  setRounds={setRounds}
+  setPhase={setPhase}
+  onImport={handleImport}
+/>
 
   // Reset tournament
   const resetTournament = () => {
@@ -88,6 +111,7 @@ function TournamentApp() {
             setTeams={setTeams}
             setRounds={setRounds}
             setPhase={setPhase}
+            onImport={handleImport}
           />
         )}
 

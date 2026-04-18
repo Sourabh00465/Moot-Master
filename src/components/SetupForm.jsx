@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import generatePrelims from "../utils/generatePrelims";
 
-function SetupForm({ setTeams, setRounds, setPhase }) {
+
+function SetupForm({ setTeams, setRounds, setPhase, onImport }) {
   const [teamCount, setTeamCount] = useState("");
   const fileInputRef = useRef(null);
 
@@ -12,7 +13,6 @@ function SetupForm({ setTeams, setRounds, setPhase }) {
     }
     setTeams(teams);
 
-    // Generate prelim rounds immediately
     const [round1, round2] = generatePrelims(teams);
     setRounds([round1, round2]);
 
@@ -23,9 +23,7 @@ function SetupForm({ setTeams, setRounds, setPhase }) {
     const reader = new FileReader();
     reader.onload = (e) => {
       const data = JSON.parse(e.target.result);
-      setTeams(data.initialTeams || []);
-      setRounds([data.round1 || [], data.round2 || []]);
-      setPhase("prelims");
+      onImport(data);   // <-- delegate to TournamentApp
     };
     reader.readAsText(file);
   };
@@ -45,7 +43,7 @@ function SetupForm({ setTeams, setRounds, setPhase }) {
         <h3>Or Import Saved Tournament</h3>
         <input
           type="file"
-          accept="application/json"
+          accept="application/json,.txt"
           ref={fileInputRef}
           style={{ display: "none" }}
           onChange={(e) => importTournament(e.target.files[0])}
@@ -57,5 +55,6 @@ function SetupForm({ setTeams, setRounds, setPhase }) {
     </div>
   );
 }
+
 
 export default SetupForm;
